@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>tr.gov.turkiye</groupId>
+        <artifactId>ESign</artifactId>
+        <version>1.0</version>
+    </parent>
+    
+    <groupId>tr.gov.turkiye</groupId>
+    <artifactId>ESignCore</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    
+    <dependencies>
+        <dependency>
+            <groupId>at.tugraz.iaik</groupId>
+            <artifactId>pkcs11-wrapper</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>at.tugraz.iaik</groupId>
+            <artifactId>iaik_jce_full</artifactId>
+            <version>5.24</version>
+        </dependency>
+        <dependency>
+            <groupId>at.tugraz.iaik</groupId>
+            <artifactId>iaik_cms</artifactId>
+            <version>5.0</version>
+        </dependency>
+    </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>iaik</id>
+            <url>https://repository.everit.biz/nexus/content/groups/public/</url>
+        </repository>
+        <!--iaik_jce_full,iaik_cms does not exists on maven repository therefore we need to create a repo to keep them--> 
+        <repository>
+            <id>my-repo</id>
+            <url>file://${basedir}/local-repo</url>
+          </repository>
+    </repositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <!--Add manifest properties-->
+                        <manifestEntries>
+                            <Permissions>all-permissions</Permissions>
+                            <Trusted-Library>true</Trusted-Library>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>  
+        </plugins>
+    </build>  
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+</project>
+
+
+<!--Below are used to put jars into repo-->
+<!--mvn install:install-file -Dfile=/Users/iakpolat/Downloads/lib/iaik_jce_full.jar -DgroupId=at.tugraz.iaik -DartifactId=iaik_jce_full -Dversion=5.24 -Dpackaging=jar -DlocalRepositoryPath=/Users/iakpolat/Documents/NetBeansProjects/TurksatProjects/OpenSource/ESign/ESignCore/local-repo
+mvn install:install-file -Dfile=/Users/iakpolat/Downloads/lib/iaik_cms.jar -DgroupId=at.tugraz.iaik -DartifactId=iaik_cms -Dversion=5.0 -Dpackaging=jar -DlocalRepositoryPath=/Users/iakpolat/Documents/NetBeansProjects/TurksatProjects/OpenSource/ESign/ESignCore/local-repo-->

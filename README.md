@@ -170,4 +170,8 @@ mvn install:install-file -Dfile=/path/to/iaik_cms_jar_file/iaik_cms.jar -DgroupI
 link to api:
 (http://maven.apache.org/plugins/maven-install-plugin/install-file-mojo.html)
 
+####Run
+Before building project. Keystore information is need to be defined or build configuration should be removed from pom.xml of ESignUI application. Otherwise project cannot be build.
 
+1. Build all projects.
+2. Run ESignUI StartFrame.class to test whether build done successfully or not.

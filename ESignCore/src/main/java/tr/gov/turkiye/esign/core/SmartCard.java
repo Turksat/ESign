@@ -38,10 +38,12 @@ import tr.gov.turkiye.esign.cms.SignedData;
 import tr.gov.turkiye.esign.cms.SignerInfo;
 import tr.gov.turkiye.esign.cms.SigningCertificate;
 import tr.gov.turkiye.esign.exception.SmartCardException;
+import tr.gov.turkiye.esign.manager.LibraryManager;
 
 import tr.gov.turkiye.esign.model.KeyAndCertificate;
 import tr.gov.turkiye.esign.support.CertificatePolicySupport;
 import tr.gov.turkiye.esign.support.ExceptionSupport;
+import tr.gov.turkiye.esign.util.Util;
 
 /**
  *
@@ -63,12 +65,11 @@ public class SmartCard {
     public SmartCard(String moduleName) throws SmartCardException {
         try {
             pkcs11Module = (PKCS11Implementation) PKCS11Connector.connectToPKCS11Module(moduleName);
-            System.out.println(pkcs11Module.C_GetInfo());
+            System.out.println("MN:" + moduleName);
+            //System.out.println(pkcs11Module.C_GetInfo());
         } catch (final IOException e) {
             MessageFormat fm = new MessageFormat(ExceptionSupport.getValue("LibraryInitializationError"));
             throw new SmartCardException(fm.format(new Object[]{moduleName}), e);
-        } catch (PKCS11Exception ex) {
-            Logger.getLogger(SmartCard.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             pkcs11Module.C_Initialize(null, true);
@@ -561,6 +562,6 @@ public class SmartCard {
             br.close();
         }
     }
-
+    
 
 }

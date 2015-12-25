@@ -153,23 +153,6 @@ settings.xml
   1.	Let user download signed user agreement or login.
 
 
-####Properties File
-If you want your application to use your own properties file which extends esignui application, just put properties files with same names to your application and set their values to your liking.
-
-####Adding Jars To Local Repository
-iaik_jce_full and iaik_cms libraries by default does not exists in maven repository. Therefore we need to add them to our repository manually. By default this is done for you no need to do this again. Local repository 
-
-Below commands are used to put jars into local maven repository:
-
-```
-mvn install:install-file –Dfile=/path/to/iaik_jce_full_jar_file/iaik_jce_full.jar -DgroupId=at.tugraz.iaik -DartifactId=iaik_jce_full -Dversion=5.24 -Dpackaging=jar -DlocalRepositoryPath=/path/to/repo
-```
-```
-mvn install:install-file -Dfile=/path/to/iaik_cms_jar_file/iaik_cms.jar -DgroupId=at.tugraz.iaik -DartifactId=iaik_cms -Dversion=5.0 -Dpackaging=jar –DlocalRepositoryPath=/path/to/repo
-```
-link to api:
-(http://maven.apache.org/plugins/maven-install-plugin/install-file-mojo.html)
-
 ####Run
 Before building project. Keystore information is need to be defined or build configuration should be removed from pom.xml of ESignUI application. Otherwise project cannot be build.
 

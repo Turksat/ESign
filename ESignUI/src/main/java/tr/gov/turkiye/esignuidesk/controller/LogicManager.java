@@ -10,6 +10,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tr.gov.turkiye.esign.core.SmartCard;
+import tr.gov.turkiye.esign.exception.SmartCardException;
 import tr.gov.turkiye.esign.manager.LibraryManager;
 import tr.gov.turkiye.esign.statics.Modules;
 import tr.gov.turkiye.esignuidesk.config.Config;
@@ -78,7 +79,7 @@ public class LogicManager {
                 //goto screen 1
                 LogicManager.smartCard.finalizeModule();
                 GUIManager.changeScreen(new CardSelectScreen());
-            } catch (TokenException ex) {
+            } catch (SmartCardException ex) {
                 Logger.getLogger(LogicManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if(screenId==Config.PIN_PANE_ID) { //goto screen 2

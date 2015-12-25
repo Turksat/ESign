@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import tr.gov.turkiye.esign.core.SmartCard;
+import tr.gov.turkiye.esign.exception.SmartCardException;
 import tr.gov.turkiye.esignuidesk.annotation.FocusOwner;
 import tr.gov.turkiye.esignuidesk.config.Config;
 import tr.gov.turkiye.esignuidesk.controller.LogicManager;
@@ -162,7 +163,7 @@ public class DonePane extends javax.swing.JPanel {
     private void quitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitBtnActionPerformed
         try {
             LogicManager.smartCard.finalizeModule();
-        } catch (TokenException ex) {
+        } catch (SmartCardException ex) {
             Logger.getLogger(DonePane.class.getName()).log(Level.SEVERE, null, ex);
         }
         LogicManager.done(Config.DONE_PANE_ID);

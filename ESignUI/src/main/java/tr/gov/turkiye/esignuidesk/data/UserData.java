@@ -5,7 +5,7 @@
  */
 package tr.gov.turkiye.esignuidesk.data;
 
-import iaik.x509.X509Certificate;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import tr.gov.turkiye.esignuidesk.props.ScreenProperties;

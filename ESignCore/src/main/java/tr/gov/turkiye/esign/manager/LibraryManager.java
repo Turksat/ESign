@@ -8,8 +8,11 @@ package tr.gov.turkiye.esign.manager;
 import tr.gov.turkiye.esign.statics.LibConfig;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import tr.gov.turkiye.esign.statics.OS;
@@ -31,6 +34,25 @@ public class LibraryManager {
     public static boolean loadPKCS11Wrapper() {
         try {
             System.loadLibrary("pkcs11wrapper");
+        } catch (final Throwable t) {
+            t.printStackTrace(System.err);
+            if (t.getMessage().toLowerCase().contains("already loaded")) {
+                return true;
+            }
+            return t.getLocalizedMessage().contains("already loaded");
+        }
+        return true;
+    }
+    
+    /**
+     * Loads pkcs wrapper library by path.
+     * 
+     * @param libPath
+     * @return If library is loaded successfully or already loaded return true, otherwise false.
+     */
+    public static boolean loadPKCS11Wrapper(String libPath) {
+        try {
+            System.load(libPath);
         } catch (final Throwable t) {
             t.printStackTrace(System.err);
             if (t.getMessage().toLowerCase().contains("already loaded")) {
@@ -108,25 +130,28 @@ public class LibraryManager {
     }
 
     /**
-     * Gets libraries and install them into user.home directory of user computer temporarily. 
+     * Gets libraries and install them into temporary directory of user computer temporarily.
      * After that binds library to jvm until it terminates.
      * @return 
-     * @throws java.lang.Exception 
+     * @throws java.io.IOException 
+     * @throws java.lang.IllegalAccessException 
+     * @throws java.lang.NoSuchFieldException 
      */
-    public static boolean installAndLoadPKCS11Wrapper() throws Exception {
+    public static String installAndLoadPKCS11Wrapper() throws IOException, IllegalAccessException, NoSuchFieldException {
         InputStream fileInputStream;
         //load library as stream
         fileInputStream = LibraryManager.class.getClassLoader().getResourceAsStream(LibraryManager.getInstallDir());
-        final File destinationFile;
+//        final File destinationFile;
         final BufferedOutputStream bufferedFileOutputStream;
         //temp file name and extension not important
-//            final File destinationFile = File.createTempFile("pkcs11wrapper", "dll"));        
+        
+        final File destinationFile = File.createTempFile(System.mapLibraryName("pkcs11wrapper"), "");
+//        final File destinationFile = new File(System.getProperty("java.io.tmpdir")+System."libpkcs11wrapper.dylib");
         try (BufferedInputStream bufferdFileInputStream = new BufferedInputStream(fileInputStream)) {
             //temp file name and extension not important
 //            final File destinationFile = File.createTempFile("pkcs11wrapper", "dll"));
-            destinationFile = new File(getExportDir());
-            bufferedFileOutputStream = new BufferedOutputStream(new FileOutputStream(
-                    destinationFile));
+//            destinationFile = new File(getExportDir());
+            bufferedFileOutputStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
             final byte[] buffer = new byte[4096];
             int bytesRead;
             //load library into user temp directory
@@ -138,12 +163,16 @@ public class LibraryManager {
         bufferedFileOutputStream.close();
         destinationFile.deleteOnExit();
 
-        //Adds user.home to java.library.path
-        addHome2Path();
+//        //Adds user.home to java.library.path
+//        addHome2Path();
+        //Adds temporary file path to java.library.path
+        addTempDir2Path();
 
 //            System.load(destinationFile.getAbsolutePath());
-        System.loadLibrary("pkcs11wrapper");
-        return true;
+//        System.loadLibrary("pkcs11wrapper");
+//        loadPKCS11Wrapper();
+        loadPKCS11Wrapper(destinationFile.getAbsolutePath());
+        return destinationFile.getAbsolutePath();
     }
 
     /**
@@ -158,6 +187,16 @@ public class LibraryManager {
     }
     
     /**
+     * Adds temporary file path to java.library.path.
+     * 
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException 
+     */
+    private static void addTempDir2Path() throws IllegalAccessException, NoSuchFieldException {
+        add2LibPath(System.getProperty("java.io.tmpdir"));
+    }
+    
+    /**
      * Adds given path to java.library.path. To do this after setting system property,
      * sys_paths set to null to force jvm to fill it again when a new call is made for java.library.path.
      * 
@@ -167,11 +206,12 @@ public class LibraryManager {
      * @throws IllegalAccessException 
      */
     public static void add2LibPath(String path) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        System.setProperty("java.library.path", System.getProperty("java.library.path")+File.pathSeparator+path);
+        System.setProperty("java.library.path", path+File.pathSeparator+System.getProperty("java.library.path"));
 //        System.out.println(System.getProperty("java.library.path"));
         Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
         fieldSysPath.setAccessible(true);
         fieldSysPath.set(null, null);
         fieldSysPath.setAccessible(false);
-    }    
+    }
+    
 }

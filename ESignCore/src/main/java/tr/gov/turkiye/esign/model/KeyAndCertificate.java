@@ -42,8 +42,9 @@
 
 package tr.gov.turkiye.esign.model;
 
-import iaik.pkcs.pkcs11.objects.Key;
-import iaik.x509.X509Certificate;
+import java.security.cert.X509Certificate;
+
+
 
 /**
  * This class encapsulates a key and an optional certificate.
@@ -53,7 +54,7 @@ public class KeyAndCertificate {
 	/**
 	 * The key.
 	 */
-	protected Key key_;
+	protected long keyHandle_;
 
 	/**
 	 * This optional certificate.
@@ -68,8 +69,8 @@ public class KeyAndCertificate {
 	 * @preconditions
 	 * @postconditions
 	 */
-	public KeyAndCertificate(Key key, X509Certificate certificate) {
-		key_ = key;
+	public KeyAndCertificate(long keyHandle, X509Certificate certificate) {
+		keyHandle_ = keyHandle;
 		certificate_ = certificate;
 	}
 
@@ -91,8 +92,8 @@ public class KeyAndCertificate {
 	 * @preconditions
 	 * @postconditions
 	 */
-	public Key getKey() {
-		return key_;
+	public long getKeyHandle() {
+		return keyHandle_;
 	}
 
 	/**
@@ -113,8 +114,8 @@ public class KeyAndCertificate {
 	 * @preconditions
 	 * @postconditions
 	 */
-	public void setKey(Key key) {
-		key_ = key;
+	public void setKeyHandle(long keyHandle) {
+		keyHandle_ = keyHandle;
 	}
 
 }

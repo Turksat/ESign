@@ -1,23 +1,28 @@
-#ESign
-####Definition
+# ESign
+
+## Definition
+
 ESign is an open source electronic signature application which consists of ESignCore, ESignUI and ESignWebApp applications.
 
 1. ESignCore: Includes core functionalities.
 2. ESignUI: Includes almost complete sample UI for testing core functionalities. Includes desktop and web UI:
-  1. Desktop: JFrame is used as a main container. Application runs inside frame and pages are separated by panels.
-  2. Web: JApplet is used as a main panel. Applet can be embedded into JFrame for testing or it can be embedded into jsp file inside ESignWebApp to run.
+    1. Desktop: JFrame is used as a main container. Application runs inside frame and pages are separated by panels.
+    2. Web: JApplet is used as a main panel. Applet can be embedded into JFrame for testing or it can be embedded into jsp file inside ESignWebApp to run.
 3. ESignWebApp: Sample web application to use as a container for applet.
 
-####Jar Signing
+## Jar Signing
+
 To run application using JFrame no need to sign application. In pom.xml by default build configuration for sign operation is added. If a valid trusted certificate is not provided, it will prevent application to be built. One can comment out those fields to successfully built and run application.
 
-If applet will be used it has to be signed by trusted certificate. Its forced by browsers. Some other ways could be found to bypass this for testing(google it). Signing is done in 3 steps.
-  1. Define manifest file.
-  2. One jar all jar files.
-  3. Sign with trusted key.
+If applet will be used it has to be signed by trusted certificate. Its forced by browsers. Some other ways could be found to bypass this for testing(google it). Signing is done in 3 steps:
+
+1. Define manifest file.
+2. One jar all jar files.
+3. Sign with trusted key.
 
 To achieve these below code is added to pom.xml in ESignUI application:
-```
+
+```xml
 <build>
     <plugins>
         <!--Set manifest file-->
@@ -93,13 +98,16 @@ To achieve these below code is added to pom.xml in ESignUI application:
     </plugins>
 </build>
 ```
-#####Settings File
+
+### Settings File
+
 To sign application keystore information is need to be provided in pom.xml. Since its not suitable to distribute this data along with code, settings file can be used. Settings file is used to create maven specific environment variables. Later on data can be reached using ${...}.
 
-######Example:
+#### Example:
 
 pom.xml
-```
+
+```xml
 ...
 <configuration>
 <keystore>${keystore}</keystore>
@@ -111,7 +119,8 @@ pom.xml
 ```
 
 settings.xml
-```
+
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     User-specific configuration for maven. Includes things that should not 
@@ -138,22 +147,24 @@ settings.xml
     </activeProfiles>
 </settings>
 ```
-####E-SignUI Basic Steps
-1.	Check if library pkcs11wrapper is installed.
-2.	List modules.
-  1.	Select module.
-3.	Read certificate.
-  1.	Show certificate details.
-  2.	Show user agreement.
-  3.	Accept user agreement.
-4.	Let user enter pin code.
-  1.	Check pin code.
-  2.	Sign user agreement.
-5.	Show last page.
-  1.	Let user download signed user agreement or login.
 
+## E-SignUI Basic Steps
 
-####Run
+1. Check if library pkcs11wrapper is installed.
+2. List modules.
+    1. Select module.
+3. Read certificate.
+  1. Show certificate details.
+  2. Show user agreement.
+  3. Accept user agreement.
+4. Let user enter pin code.
+  1. Check pin code.
+  2. Sign user agreement.
+5. Show last page.
+  1. Let user download signed user agreement or login.
+
+## Run
+
 Before building project. Keystore information is need to be defined or build configuration should be removed from pom.xml of ESignUI application. Otherwise project cannot be build.
 
 1. Build all projects.
